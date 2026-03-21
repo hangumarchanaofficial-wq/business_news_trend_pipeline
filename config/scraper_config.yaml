@@ -1,0 +1,40 @@
+scraping:
+  timeout: 60000
+  wait_time: 5
+  max_words: 1000
+  headless: true
+
+sources:
+  daily_mirror:
+    business_url: "https://www.dailymirror.lk/business-news/215"
+    selectors:
+      business:
+        - "a"
+
+  the_morning:
+    news_url: "https://www.themorning.lk/"
+    selectors:
+      articles: "a"
+
+  ft_lk:
+    base_url: "https://www.ft.lk"
+    business_list: "https://www.ft.lk/business/34"
+    selectors:
+      articles:
+        - "a"
+
+  economic_times:
+    base_url: "https://economynext.com"
+    economy_url: "https://economynext.com/category/economy"
+    selectors:
+      articles: "a"
+
+  sunday_times:
+    business_url: "https://www.sundaytimes.lk/business-times/"
+    selectors:
+      articles: "a"
+
+  lmd:
+    base_url: "https://lmd.lk"
+    selectors:
+      articles: "a"

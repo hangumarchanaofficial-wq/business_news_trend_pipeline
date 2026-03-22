@@ -1,12 +1,12 @@
 """
 Stage 2a: Load the raw JSON data lake into a PySpark DataFrame.
+Tries to download the latest version from S3 first.
 """
 
 import json
+import uuid
 from pyspark.sql import SparkSession
-from pyspark.sql.types import (
-    StructType, StructField, StringType, TimestampType
-)
+from pyspark.sql.types import StructType, StructField, StringType
 
 from src.utils.logger import get_logger
 
@@ -24,8 +24,15 @@ RAW_SCHEMA = StructType([
 ])
 
 
-def load_raw_to_spark(spark: SparkSession, raw_json_path: str):
-    """Read the raw JSON array file into a Spark DataFrame with enforced schema."""
+def load_raw_to_spark(spark: SparkSession, raw_json_path: str,
+                      s3_manager=None):
+    """Read the raw JSON array file into a Spark DataFrame with enforced schema.
+    If s3_manager is provided, downloads the latest file from S3 first."""
+
+    # Pull latest from S3 before reading
+    if s3_manager:
+        log.info("Downloading latest raw data from S3...")
+        s3_manager.download_raw_articles(raw_json_path)
 
     log.info(f"Loading raw JSON from {raw_json_path}")
 
@@ -37,8 +44,7 @@ def load_raw_to_spark(spark: SparkSession, raw_json_path: str):
             articles = data
         else:
             articles = []
-            
-    import uuid
+
     for a in articles:
         if "full_text" in a and "body" not in a:
             a["body"] = a.pop("full_text")
@@ -51,5 +57,6 @@ def load_raw_to_spark(spark: SparkSession, raw_json_path: str):
         return spark.createDataFrame([], RAW_SCHEMA)
 
     df = spark.createDataFrame(articles, schema=RAW_SCHEMA)
-    log.info(f"Spark DataFrame created: {df.count()} rows, {len(df.columns)} columns")
+    log.info(f"Spark DataFrame created: {df.count()} rows, "
+             f"{len(df.columns)} columns")
     return df

@@ -1,14 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
   <component name="ChangeListManager">
-    <list default="true" id="42d85a0b-3f0d-4b54-a659-bd55a22da708" name="Changes" comment="" />
+    <list default="true" id="42d85a0b-3f0d-4b54-a659-bd55a22da708" name="Changes" comment=" implement S3DataLakeManager for bucket creation, upload, download, and listing">
+      <change afterPath="$PROJECT_DIR$/setup_ec2.sh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="EmbeddingIndexingInfo">
-    <option name="cachedIndexableFilesCount" value="4" />
+    <option name="cachedIndexableFilesCount" value="553" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Python Script" />
+      </list>
+    </option>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -17,9 +30,9 @@
     <commands />
     <urls />
   </component>
-  <component name="ProjectColorInfo"><![CDATA[{
-  "associatedIndex": 1
-}]]></component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 1
+}</component>
   <component name="ProjectId" id="3BFlN7BNLwRxvGfNnzGiBd1Gz5P" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
@@ -28,11 +41,13 @@
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
     "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "Python.main.executor": "Run",
     "RunOnceActivity.MCP Project settings loaded": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
     "RunOnceActivity.git.unshallow": "true",
     "RunOnceActivity.typescript.service.memoryLimit.init": "true",
+    "SHELLCHECK.PATH": "C:\\Users\\hangu\\AppData\\Roaming\\JetBrains\\WebStorm2025.3\\plugins\\Shell Script\\shellcheck.exe",
     "com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1": "true",
     "git-widget-placeholder": "main",
     "javascript.preferred.runtime.type.id": "node",
@@ -42,10 +57,70 @@
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable",
     "to.speed.mode.migration.done": "true",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\hangu\WebstormProjects\business-news-trend-pipeline\src\loading" />
+    </key>
+  </component>
+  <component name="RunManager" selected="Python.main">
+    <configuration name="check_warehouse" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="business-news-trend-pipeline" />
+      <option name="ENV_FILES" value="" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="RUN_TOOL" value="" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/check_warehouse.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="main" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="business-news-trend-pipeline" />
+      <option name="ENV_FILES" value="" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="RUN_TOOL" value="" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/main.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Python.main" />
+        <item itemvalue="Python.check_warehouse" />
+      </list>
+    </recent_temporary>
+  </component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
@@ -60,11 +135,224 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1774092657432</updated>
-      <workItem from="1774092658457" duration="309000" />
+      <workItem from="1774092658457" duration="10205000" />
+      <workItem from="1774109723318" duration="330000" />
+      <workItem from="1774150247024" duration="5402000" />
+      <workItem from="1774158080622" duration="2971000" />
+      <workItem from="1774183743402" duration="2679000" />
+      <workItem from="1774193860495" duration="1989000" />
     </task>
+    <task id="LOCAL-00001" summary="implement the main run_scrapper.py to run the base scrappers to extract newspaper data">
+      <option name="closed" value="true" />
+      <created>1774099805857</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1774099805857</updated>
+    </task>
+    <task id="LOCAL-00002" summary="implement news_scraper.py for extract data by destructuring  web content and parsing them into useful informations">
+      <option name="closed" value="true" />
+      <created>1774100064317</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1774100064317</updated>
+    </task>
+    <task id="LOCAL-00003" summary="implement base_scraper.py to find newspaper content and set timeout to avoid errors">
+      <option name="closed" value="true" />
+      <created>1774100195850</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1774100195850</updated>
+    </task>
+    <task id="LOCAL-00004" summary="initialize the newspaper links to render them in playwright">
+      <option name="closed" value="true" />
+      <created>1774100250130</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1774100250130</updated>
+    </task>
+    <task id="LOCAL-00005" summary="Add ingestion layer (base_scraper.py, news_scraper.py, raw_storage.py)">
+      <option name="closed" value="true" />
+      <created>1774150914045</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1774150914045</updated>
+    </task>
+    <task id="LOCAL-00006" summary=" Add staging modules (parse_raw_json.py, deduplicate.py)">
+      <option name="closed" value="true" />
+      <created>1774150938917</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1774150938917</updated>
+    </task>
+    <task id="LOCAL-00007" summary="Add transformation pipeline (clean_text, handle_missing, sentiment_analysis,&#10;  extract_keywords, classify_topics, standardize_fields)">
+      <option name="closed" value="true" />
+      <created>1774150981331</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1774150981331</updated>
+    </task>
+    <task id="LOCAL-00008" summary="Add aggregation modules (daily_summary, keyword_trends, topic_counts)">
+      <option name="closed" value="true" />
+      <created>1774151003432</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1774151003432</updated>
+    </task>
+    <task id="LOCAL-00009" summary="Add warehouse loader (load_warehouse.py) with SQLite star schema">
+      <option name="closed" value="true" />
+      <created>1774151040664</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1774151040664</updated>
+    </task>
+    <task id="LOCAL-00010" summary="Add warehouse loader (load_warehouse.py) with SQLite star schema">
+      <option name="closed" value="true" />
+      <created>1774151104219</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1774151104219</updated>
+    </task>
+    <task id="LOCAL-00011" summary="Add pipeline orchestration (pipeline_runner.py) and entry point (main.py)">
+      <option name="closed" value="true" />
+      <created>1774151130330</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1774151130330</updated>
+    </task>
+    <task id="LOCAL-00012" summary="Add config files (pipeline_config.yaml, scraper_config.yaml)">
+      <option name="closed" value="true" />
+      <created>1774151150228</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1774151150228</updated>
+    </task>
+    <task id="LOCAL-00013" summary="Add centralized logging (logger.py)">
+      <option name="closed" value="true" />
+      <created>1774151179260</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1774151179260</updated>
+    </task>
+    <task id="LOCAL-00014" summary="update raw articles data lake with latest scraped articles">
+      <option name="closed" value="true" />
+      <created>1774194871139</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1774194871139</updated>
+    </task>
+    <task id="LOCAL-00015" summary="add AWS S3 configuration for data lake (region, bucket, key prefixes)">
+      <option name="closed" value="true" />
+      <created>1774194888253</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1774194888253</updated>
+    </task>
+    <task id="LOCAL-00016" summary="add UTF-8 encoding for SQL file reads and replace">
+      <option name="closed" value="true" />
+      <created>1774194905842</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1774194905842</updated>
+    </task>
+    <task id="LOCAL-00017" summary="add PYSPARK_DRIVER_PYTHON_OPTS env var for EC2 compatibility">
+      <option name="closed" value="true" />
+      <created>1774194918925</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1774194918925</updated>
+    </task>
+    <task id="LOCAL-00018" summary="add S3 download support before loading raw JSON into Spark">
+      <option name="closed" value="true" />
+      <created>1774194933008</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1774194933008</updated>
+    </task>
+    <task id="LOCAL-00019" summary=" bump version to 2.0.0 and add EC2 environment flag">
+      <option name="closed" value="true" />
+      <created>1774194951580</created>
+      <option name="number" value="00019" />
+      <option name="presentableId" value="LOCAL-00019" />
+      <option name="project" value="LOCAL" />
+      <updated>1774194951580</updated>
+    </task>
+    <task id="LOCAL-00020" summary=" bump version to 2.0.0 and add EC2 environment flag">
+      <option name="closed" value="true" />
+      <created>1774194977997</created>
+      <option name="number" value="00020" />
+      <option name="presentableId" value="LOCAL-00020" />
+      <option name="project" value="LOCAL" />
+      <updated>1774194977997</updated>
+    </task>
+    <task id="LOCAL-00021" summary="add S3 sync support with auto-upload on save and download on init">
+      <option name="closed" value="true" />
+      <created>1774194996150</created>
+      <option name="number" value="00021" />
+      <option name="presentableId" value="LOCAL-00021" />
+      <option name="project" value="LOCAL" />
+      <updated>1774194996150</updated>
+    </task>
+    <task id="LOCAL-00022" summary=" implement S3DataLakeManager for bucket creation, upload, download, and listing">
+      <option name="closed" value="true" />
+      <created>1774195031386</created>
+      <option name="number" value="00022" />
+      <option name="presentableId" value="LOCAL-00022" />
+      <option name="project" value="LOCAL" />
+      <updated>1774195031386</updated>
+    </task>
+    <task id="LOCAL-00023" summary=" implement S3DataLakeManager for bucket creation, upload, download, and listing">
+      <option name="closed" value="true" />
+      <created>1774195156908</created>
+      <option name="number" value="00023" />
+      <option name="presentableId" value="LOCAL-00023" />
+      <option name="project" value="LOCAL" />
+      <updated>1774195156908</updated>
+    </task>
+    <option name="localTasksCounter" value="24" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="implement the main run_scrapper.py to run the base scrappers to extract newspaper data" />
+    <MESSAGE value="implement news_scraper.py for extract data by destructuring  web content and parsing them into useful informations" />
+    <MESSAGE value="implement base_scraper.py to find newspaper content and set timeout to avoid errors" />
+    <MESSAGE value="initialize the newspaper links to render them in playwright" />
+    <MESSAGE value="Add ingestion layer (base_scraper.py, news_scraper.py, raw_storage.py)" />
+    <MESSAGE value=" Add staging modules (parse_raw_json.py, deduplicate.py)" />
+    <MESSAGE value="Add transformation pipeline (clean_text, handle_missing, sentiment_analysis,&#10;  extract_keywords, classify_topics, standardize_fields)" />
+    <MESSAGE value="Add aggregation modules (daily_summary, keyword_trends, topic_counts)" />
+    <MESSAGE value="Add warehouse loader (load_warehouse.py) with SQLite star schema" />
+    <MESSAGE value="Add pipeline orchestration (pipeline_runner.py) and entry point (main.py)" />
+    <MESSAGE value="Add config files (pipeline_config.yaml, scraper_config.yaml)" />
+    <MESSAGE value="Add centralized logging (logger.py)" />
+    <MESSAGE value="update raw articles data lake with latest scraped articles" />
+    <MESSAGE value="add AWS S3 configuration for data lake (region, bucket, key prefixes)" />
+    <MESSAGE value="add UTF-8 encoding for SQL file reads and replace" />
+    <MESSAGE value="add PYSPARK_DRIVER_PYTHON_OPTS env var for EC2 compatibility" />
+    <MESSAGE value="add S3 download support before loading raw JSON into Spark" />
+    <MESSAGE value=" bump version to 2.0.0 and add EC2 environment flag" />
+    <MESSAGE value="add S3 sync support with auto-upload on save and download on init" />
+    <MESSAGE value=" implement S3DataLakeManager for bucket creation, upload, download, and listing" />
+    <option name="LAST_COMMIT_MESSAGE" value=" implement S3DataLakeManager for bucket creation, upload, download, and listing" />
   </component>
 </project>

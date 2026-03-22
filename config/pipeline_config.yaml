@@ -1,0 +1,84 @@
+# ── Pipeline-wide configuration ──
+
+pipeline:
+  name: "Sri Lankan Business News Trend Pipeline"
+  version: "1.0.0"
+
+paths:
+  raw_data_dir: "data/raw"
+  raw_articles_file: "data/raw/articles.json"
+  warehouse_db: "data/warehouse/news_warehouse.db"
+
+ingestion:
+  retention_days: 3
+
+spark:
+  app_name: "NewsETL"
+  master: "local[*]"
+  log_level: "WARN"
+
+topics:
+  "Tourism":
+    - "tourism"
+    - "hotel"
+    - "travel"
+    - "airline"
+    - "visitor"
+    - "resort"
+    - "arrivals"
+  "Banking & Finance":
+    - "bank"
+    - "interest rate"
+    - "cbsl"
+    - "central bank"
+    - "loan"
+    - "credit"
+    - "financial"
+    - "deposit"
+    - "npl"
+  "Trade & Exports":
+    - "export"
+    - "import"
+    - "trade"
+    - "tariff"
+    - "customs"
+    - "shipping"
+    - "port"
+    - "fta"
+    - "garment"
+    - "tea export"
+  "Fiscal Policy":
+    - "tax"
+    - "budget"
+    - "revenue"
+    - "imf"
+    - "debt"
+    - "fiscal"
+    - "treasury"
+    - "inflation"
+    - "gdp"
+  "Real Estate":
+    - "real estate"
+    - "property"
+    - "construction"
+    - "housing"
+    - "apartment"
+    - "colombo port city"
+  "Technology":
+    - "technology"
+    - "digital"
+    - "startup"
+    - "fintech"
+    - "software"
+    - "it sector"
+    - "innovation"
+  "Agriculture":
+    - "agriculture"
+    - "farming"
+    - "paddy"
+    - "fertilizer"
+    - "crop"
+    - "plantation"
+    - "tea"
+    - "rubber"
+    - "coconut"

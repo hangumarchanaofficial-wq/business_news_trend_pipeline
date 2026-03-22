@@ -7,34 +7,44 @@ scraping:
 sources:
   daily_mirror:
     business_url: "https://www.dailymirror.lk/business-news/215"
+    source_type: "daily newspaper"
     selectors:
       business:
-        - "a"
+        - "div.cat_content a"
+        - "h3 a"
+        - "div.media a"
 
   the_morning:
     news_url: "https://www.themorning.lk/"
+    source_type: "daily newspaper"
     selectors:
-      articles: "a"
+      articles: "div.post-content a, h2 a, h3 a"
 
   ft_lk:
     base_url: "https://www.ft.lk"
     business_list: "https://www.ft.lk/business/34"
+    source_type: "financial daily"
     selectors:
       articles:
-        - "a"
+        - "div.col-md-8 a"
+        - "h3 a"
+        - "div.media-body a"
 
   economic_times:
     base_url: "https://economynext.com"
     economy_url: "https://economynext.com/category/economy"
+    source_type: "financial news"
     selectors:
-      articles: "a"
+      articles: "h2 a, h3 a, div.td-module-title a"
 
   sunday_times:
     business_url: "https://www.sundaytimes.lk/business-times/"
+    source_type: "weekly newspaper"
     selectors:
-      articles: "a"
+      articles: "h2 a, h3 a, div.entry-title a"
 
   lmd:
     base_url: "https://lmd.lk"
+    source_type: "monthly magazine"
     selectors:
-      articles: "a"
+      articles: "h2 a, h3 a, div.post-title a"

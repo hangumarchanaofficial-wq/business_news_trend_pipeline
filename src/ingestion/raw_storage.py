@@ -1,6 +1,6 @@
 """
-Raw data-lake storage — persists scraped articles as JSON on local disk.
-This is the 'Data Lake' component of the pipeline.
+Raw data-lake storage — persists scraped articles as JSON on local disk,
+then syncs to S3 for durable cloud storage.
 """
 
 import json
@@ -14,11 +14,17 @@ log = get_logger("ingestion.raw_storage")
 
 
 class RawStorage:
-    """Manages the JSON-based raw data lake at *filepath*."""
+    """Manages the JSON-based raw data lake at *filepath* with optional S3 sync."""
 
-    def __init__(self, filepath: str):
+    def __init__(self, filepath: str, s3_manager=None):
         self.filepath = filepath
+        self.s3_manager = s3_manager
         os.makedirs(os.path.dirname(filepath), exist_ok=True)
+
+        # If S3 manager provided, try downloading latest from S3 first
+        if self.s3_manager:
+            self.s3_manager.download_raw_articles(self.filepath)
+
         self.articles = self._load()
 
     # ── Persistence ───────────────────────────────────────────
@@ -41,6 +47,11 @@ class RawStorage:
     def _save(self):
         with open(self.filepath, "w", encoding="utf-8") as f:
             json.dump(self.articles, f, indent=2, ensure_ascii=False)
+
+    def _sync_to_s3(self):
+        """Upload local JSON to S3 after save."""
+        if self.s3_manager:
+            self.s3_manager.upload_raw_articles(self.filepath)
 
     # ── Write operations ──────────────────────────────────────
 
@@ -80,7 +91,7 @@ class RawStorage:
     def cleanup_old_articles(self, retention_days: int = 3) -> int:
         cutoff = datetime.now() - timedelta(days=retention_days)
         before = len(self.articles)
-        
+
         valid_articles = []
         for a in self.articles:
             dt_str = a.get("scraped_at", "")
@@ -93,7 +104,7 @@ class RawStorage:
                     dt = datetime.now()
             if dt >= cutoff:
                 valid_articles.append(a)
-                
+
         self.articles = valid_articles
         removed = before - len(self.articles)
         if removed:
@@ -115,3 +126,5 @@ class RawStorage:
 
     def close(self):
         self._save()
+        self._sync_to_s3()
+        log.info("Raw storage closed and synced to S3")

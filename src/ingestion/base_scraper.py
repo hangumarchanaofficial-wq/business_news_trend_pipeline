@@ -1,37 +1,51 @@
+"""
+Base scraper with reusable helpers for all news sources.
+"""
+
 from urllib.parse import urljoin
 from playwright.sync_api import TimeoutError as PlaywrightTimeoutError
 from bs4 import BeautifulSoup
 
+from src.utils.logger import get_logger
+
+log = get_logger("ingestion.base")
+
 
 class BaseScraper:
-    def __init__(self, db_manager, config):
-        self.db = db_manager
+    def __init__(self, raw_storage, config):
+        self.storage = raw_storage
         self.config = config
 
+    # ── Navigation ────────────────────────────────────────────
+
     def safe_goto(self, page, url, wait_until="domcontentloaded", timeout=60000):
-        """Safely navigate to a page and tolerate partial loads."""
+        """Navigate to *url*; tolerate partial loads on timeout."""
         try:
             page.goto(url, wait_until=wait_until, timeout=timeout)
         except PlaywrightTimeoutError:
-            print(f"[WARN] Timeout while loading {url}. Using partially loaded page.")
+            log.warning(f"Timeout loading {url} — using partial page")
 
-    def limit_words(self, text, max_words=1000):
-        """Trim article body to a manageable length."""
+    # ── Text helpers ──────────────────────────────────────────
+
+    @staticmethod
+    def limit_words(text: str, max_words: int = 1000) -> str:
         words = text.split()
         if len(words) <= max_words:
             return text
         return " ".join(words[:max_words]) + "..."
 
-    def extract_links(self, soup, selectors, base_url):
-        """Extract unique absolute links from one or more CSS selectors."""
-        links = []
+    # ── Link extraction ───────────────────────────────────────
 
+    @staticmethod
+    def extract_links(soup, selectors, base_url):
+        """Return deduplicated absolute URLs matched by one or more CSS selectors."""
         if isinstance(selectors, str):
             selectors = [selectors]
 
+        links = []
         for selector in selectors:
-            for a in soup.select(selector):
-                href = a.get("href")
+            for a_tag in soup.select(selector):
+                href = a_tag.get("href")
                 if not href:
                     continue
                 full = urljoin(base_url, href).split("#")[0]
@@ -39,8 +53,11 @@ class BaseScraper:
 
         return list(dict.fromkeys(links))
 
-    def extract_article_content(self, soup: BeautifulSoup):
-        """Extract a title and concatenated paragraph body."""
+    # ── Article content extraction ────────────────────────────
+
+    @staticmethod
+    def extract_article_content(soup: BeautifulSoup):
+        """Pull title and concatenated paragraph text from an article page."""
         title_tag = (
                 soup.find("h1", class_="entry_title")
                 or soup.find("h1", class_="entry-title")
@@ -55,7 +72,8 @@ class BaseScraper:
             paras = soup.find_all("p")
 
         full_text = " ".join(
-            p.get_text(" ", strip=True) for p in paras if p.get_text(" ", strip=True)
+            p.get_text(" ", strip=True)
+            for p in paras
+            if p.get_text(" ", strip=True)
         )
-
         return title, full_text

@@ -1,8 +1,10 @@
 """
-Pipeline orchestrator — runs the entire ETL pipeline in a single execution.
+Pipeline orchestrator — runs the entire ETL pipeline on EC2 with S3 data lake.
 """
 
 import time
+import os
+import sys
 import yaml
 from datetime import datetime
 
@@ -13,6 +15,7 @@ from src.utils.logger import get_logger
 # ── Stage imports ─────────────────────────────────────────────
 from src.ingestion.raw_storage import RawStorage
 from src.ingestion.news_scraper import NewsScraper
+from src.storage.s3_manager import S3DataLakeManager
 from src.staging.parse_raw_json import load_raw_to_spark
 from src.staging.validate_schema import validate_schema
 from src.staging.deduplicate import deduplicate
@@ -56,22 +59,27 @@ def _load_source_types(path="config/scraper_config.yaml") -> dict:
 
 def run_pipeline(skip_scraping: bool = False):
     """
-    Execute the full pipeline:
-        1. Ingest  (web scrape → raw JSON data lake)
-        2. Stage   (JSON → Spark DF, validate, deduplicate)
+    Execute the full pipeline on EC2:
+        1. Ingest  (web scrape → local JSON → S3 data lake)
+        2. Stage   (S3 → local → Spark DF, validate, deduplicate)
         3. Transform (clean, sentiment, keywords, topics)
         4. Aggregate (topic daily, keyword daily, daily summary)
-        5. Load    (write to SQLite star-schema warehouse)
+        5. Load    (write to SQLite star-schema warehouse → backup to S3)
     """
 
     cfg = _load_config()
     start = time.time()
     log.info("=" * 60)
     log.info(f"PIPELINE START — {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
+    log.info(f"Environment: EC2 + S3 Data Lake")
     log.info("=" * 60)
 
+    # ── Initialize S3 Data Lake Manager ───────────────────────
+    s3_mgr = S3DataLakeManager()
+    log.info(f"S3 bucket: {s3_mgr.bucket_name}")
+
     # ── 1. INGESTION ──────────────────────────────────────────
-    raw = RawStorage(cfg["paths"]["raw_articles_file"])
+    raw = RawStorage(cfg["paths"]["raw_articles_file"], s3_manager=s3_mgr)
 
     if not skip_scraping:
         log.info("STAGE 1: Ingestion (web scraping)")
@@ -91,13 +99,11 @@ def run_pipeline(skip_scraping: bool = False):
     else:
         log.info("STAGE 1: Ingestion SKIPPED (--skip-scraping)")
 
-    raw.close()
+    raw.close()  # saves locally + syncs to S3
 
     # ── 2. STAGING (Spark) ────────────────────────────────────
     log.info("STAGE 2: Staging")
 
-    import os
-    import sys
     spark = SparkSession.builder \
         .appName(cfg["spark"]["app_name"]) \
         .master(cfg["spark"]["master"]) \
@@ -108,7 +114,9 @@ def run_pipeline(skip_scraping: bool = False):
         .getOrCreate()
     spark.sparkContext.setLogLevel(cfg["spark"]["log_level"])
 
-    df = load_raw_to_spark(spark, cfg["paths"]["raw_articles_file"])
+    df = load_raw_to_spark(
+        spark, cfg["paths"]["raw_articles_file"], s3_manager=s3_mgr
+    )
 
     if df.count() == 0:
         log.warning("No articles to process — pipeline complete (empty)")
@@ -152,6 +160,10 @@ def run_pipeline(skip_scraping: bool = False):
 
     warehouse.close()
 
+    # ── Backup warehouse to S3 ────────────────────────────────
+    log.info("Backing up warehouse to S3...")
+    s3_mgr.upload_warehouse(cfg["paths"]["warehouse_db"])
+
     # ── Cleanup ───────────────────────────────────────────────
     df.unpersist()
     spark.stop()
@@ -159,4 +171,6 @@ def run_pipeline(skip_scraping: bool = False):
     elapsed = round(time.time() - start, 1)
     log.info("=" * 60)
     log.info(f"PIPELINE COMPLETE — {elapsed}s elapsed")
+    log.info(f"Raw data: s3://{s3_mgr.bucket_name}/{s3_mgr.raw_key}")
+    log.info(f"Warehouse: {cfg['paths']['warehouse_db']} (backed up to S3)")
     log.info("=" * 60)

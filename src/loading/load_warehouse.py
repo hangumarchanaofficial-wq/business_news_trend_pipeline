@@ -27,7 +27,7 @@ class WarehouseLoader:
     def _create_tables(self):
         sql_path = "sql/create_tables.sql"
         if os.path.exists(sql_path):
-            with open(sql_path, "r") as f:
+            with open(sql_path, "r", encoding="utf-8") as f:
                 self.conn.executescript(f.read())
             log.info("Warehouse tables created / verified")
         else:
@@ -237,13 +237,19 @@ class WarehouseLoader:
             if date_id is None:
                 continue
 
+            # PySpark Row does not support .get() — use try/except
+            try:
+                dominant_topic = row["dominant_topic"]
+            except Exception:
+                dominant_topic = ""
+
             self.conn.execute(
                 """INSERT OR REPLACE INTO fact_daily_summary
                    (date_id, total_articles, avg_sentiment,
                     active_sources, dominant_topic)
                    VALUES (?, ?, ?, ?, ?)""",
                 (date_id, row["total_articles"], row["avg_sentiment"],
-                 row["active_sources"], row.get("dominant_topic", "")),
+                 row["active_sources"], dominant_topic or ""),
             )
         self.conn.commit()
         log.info("fact_daily_summary loaded")

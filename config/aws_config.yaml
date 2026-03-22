@@ -1,0 +1,10 @@
+# ── AWS Configuration ──
+
+aws:
+  region: "ap-south-1"
+
+s3:
+  bucket_name: "sl-news-pipeline-datalake"
+  raw_prefix: "raw/articles/"
+  raw_key: "raw/articles/articles.json"
+  warehouse_prefix: "warehouse/"
